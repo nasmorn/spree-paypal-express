@@ -298,7 +298,7 @@ module Spree::PaypalExpress
 
   # create the gateway from the supplied options
   def payment_method
-    PaymentMethod.find(params[:payment_method_id])
+    PaymentMethod.find_by_type("BillingIntegration::PaypalExpress")
   end
 
   def paypal_gateway

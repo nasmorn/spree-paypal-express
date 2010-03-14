@@ -30,7 +30,11 @@ class PaypalAccount < ActiveRecord::Base
     end
 
   end
-
+  
+  def payment_gateway
+    false
+  end
+  
   def can_capture?(payment)
     find_capture(payment).nil?
   end
