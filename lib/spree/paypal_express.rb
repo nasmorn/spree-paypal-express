@@ -52,7 +52,8 @@ module Spree::PaypalExpress
                            :payer_status => @ppx_details.params["payer_status"])
 
       @order.checkout.special_instructions = @ppx_details.params["note"]
-
+      @order.checkout.shipping_method = ShippingMethod.find :first
+      
       #@order.update_attribute(:user, current_user)
       unless payment_method.preferred_no_shipping
         ship_address = @ppx_details.address
@@ -78,13 +79,14 @@ module Spree::PaypalExpress
       end
       @order.checkout.save
 
-      if payment_method.preferred_review
-        render :partial => "shared/paypal_express_confirm", :layout => true
-      else
+      # if payment_method.preferred_review
+      #   render :partial => "shared/paypal_express_confirm", :layout => true
+      # else
         paypal_finish
-      end
+      # end
     else
       gateway_error(@ppx_details)
+      render :text => 'confirm: gateway errors'
     end
   end
 
@@ -139,6 +141,7 @@ module Spree::PaypalExpress
     else
       order_params = {}
       gateway_error(ppx_auth_response)
+      render :text => 'finish: gateway errors' +  flash[:error]
     end
   end
 
@@ -153,7 +156,7 @@ module Spree::PaypalExpress
     { :description             => "Goods from #{Spree::Config[:site_name]}", # site details...
 
       #:page_style             => "foobar", # merchant account can set named config
-      :header_image            => "https://" + Spree::Config[:site_url] + "/images/logo.png",
+      :header_image            => "http://" + Spree::Config[:site_url] + "/images/logo.png",
       :background_color        => "ffffff",  # must be hex only, six chars
       :header_background_color => "ffffff",
       :header_border_color     => "ffffff",
@@ -271,7 +274,9 @@ module Spree::PaypalExpress
 
     # suggest current user's email or any email stored in the order
     opts[:email] = current_user ? current_user.email : order.checkout.email
-
+    
+    logger.info opts.to_s
+    
     opts
   end
 
@@ -310,7 +315,7 @@ module Spree::PaypalExpress
 
   # create the gateway from the supplied options
   def payment_method
-    PaymentMethod.find_by_type("BillingIntegration::PaypalExpress")
+    PaymentMethod.find_by_type("BillingIntegration::PaypalExpressAt")
   end
 
   def paypal_gateway

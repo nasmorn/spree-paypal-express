@@ -80,7 +80,8 @@ class PaypalAccount < ActiveRecord::Base
   def find_authorization(payment)
     #find the transaction associated with the original authorization/capture
     payment.txns.find(:first,
-              :conditions => {:pending_reason =>  "authorization", :payment_status => "Pending", :txn_type => PaypalTxn::TxnType::AUTHORIZE.to_s},
+              #:conditions => {:pending_reason =>  "authorization", :payment_status => "Pending", :txn_type => PaypalTxn::TxnType::AUTHORIZE.to_s},
+              :conditions => {:pending_reason =>  "payment-review", :payment_status => "Pending", :txn_type => PaypalTxn::TxnType::AUTHORIZE.to_s},
               :order => 'created_at DESC')
   end
 
