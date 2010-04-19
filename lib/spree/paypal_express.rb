@@ -5,6 +5,7 @@ module Spree::PaypalExpress
 
   def paypal_checkout
     load_object
+    
     opts = all_opts(@order, params[:payment_method_id], 'checkout')
     opts.merge!(address_options(@order))
     gateway = paypal_gateway
@@ -15,7 +16,6 @@ module Spree::PaypalExpress
       redirect_to edit_order_url(@order)
       return
     end
-
     redirect_to (gateway.redirect_url_for response.token, :review => payment_method.preferred_review)
   end
 
