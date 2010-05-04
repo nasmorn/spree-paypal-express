@@ -218,9 +218,9 @@ module Spree::PaypalExpress
 
       # get the main totals from the items (already *100)
       opts[:subtotal] = opts[:items].map {|i| i[:amount] * i[:qty] }.sum
-      opts[:tax]      = opts[:items].map {|i| i[:tax]    * i[:qty] }.sum
+      opts[:tax]      = 0 #opts[:items].map {|i| i[:tax]    * i[:qty] }.sum
       opts[:handling] = 0
-      opts[:shipping] = (order.ship_total*100).to_i
+      opts[:shipping] = 0 #(order.ship_total*100).to_i
 
       # overall total
       opts[:money]    = opts.slice(:subtotal, :tax, :shipping, :handling).values.sum
