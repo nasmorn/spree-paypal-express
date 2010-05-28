@@ -164,7 +164,7 @@ module Spree::PaypalExpress
 
       :allow_note              => true,
       :locale                  => Spree::Config[:default_locale],
-      :notify_url              => 'to be done',                 # this is a callback, not tried it yet
+      #:notify_url              => 'to be done',                 # this is a callback, not tried it yet
 
       :req_confirm_shipping    => false,   # for security, might make an option later
       :user_action             => user_action
